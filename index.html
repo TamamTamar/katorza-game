@@ -4,25 +4,24 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>משחק משפחות - גרסה סופית</title>
+    <title>משחק משפחות - גרסת ה-WOW הסופית</title>
     <link rel="stylesheet" href="./styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 
 <body>
     <main class="wrap">
-        <section class="card">
+        <section class="card" id="mainCard">
             <section id="screenGame">
                 <div class="roulette">
-                    <div id="rouletteName" class="rouletteName">—</div>
-                    <div class="row center">
-                        <button id="btnSpin" class="btn btnPrimary" type="button">הגרל משפחה</button>
-                    </div>
+                    <div id="rouletteName" class="rouletteName">מוכנים?</div>
+                    <button id="btnSpin" class="btn btnPrimary">הגרל משימה</button>
                 </div>
 
                 <div class="grid">
                     <section class="panel">
                         <div id="currentItem" class="item">—</div>
-                        <div id="taskText" class="taskText">לחצו הגרל כדי להתחיל</div>
+                        <div id="taskText" class="taskText">המשימה תופיע כאן...</div>
                     </section>
 
                     <section class="panel">
@@ -31,20 +30,21 @@
                             <div id="barFill" class="barFill"></div>
                         </div>
                         <div class="row center" style="margin-top:20px;">
-                            <button id="btnCorrect" class="btn btnPrimary" type="button" disabled>תשובה נכונה</button>
+                            <button id="btnCorrect" class="btn btnSuccess" disabled>תשובה נכונה ✅</button>
                         </div>
                     </section>
                 </div>
 
                 <div id="scores" class="scores"></div>
+               
                 <div id="toast" class="toast"></div>
             </section>
 
             <section id="screenEnd" class="hidden">
                 <div class="endWrap">
-                    <h1 class="endTitle">סיימנו! 🎉</h1>
+                    <h1 class="endTitle">האלופים שלנו! 🎉</h1>
                     <div id="winners" class="winners"></div>
-                    <button id="btnRestart" class="btn btnPrimary" style="margin-top:20px;">משחק חדש</button>
+                    <button id="btnRestart" class="btn btnPrimary">משחק חדש</button>
                 </div>
             </section>
         </section>
