@@ -176,28 +176,23 @@ function showEndScreen() {
 
     const sorted = [...state.families].sort((a, b) => b.score - a.score);
 
-    // הזרקת נתונים ומדליות
-    const updatePodium = (index, placeId, medalEmoji) => {
-        if (sorted[index]) {
-            document.getElementById(`${placeId}-name`).innerHTML = `
-                <span class="medal">${medalEmoji}</span>
-                ${sorted[index].name}
-            `;
-            document.getElementById(`${placeId}-score`).textContent = sorted[index].score;
+    // הזרקת נתונים ללא מדליות
+    const updatePodium = (index, placeId) => {
+        const nameEl = document.getElementById(`${placeId}-name`);
+        const scoreEl = document.getElementById(`${placeId}-score`);
+
+        if (sorted[index] && nameEl && scoreEl) {
+            // השם מוזרק כטקסט נקי
+            nameEl.textContent = sorted[index].name;
+            scoreEl.textContent = sorted[index].score;
         }
     };
 
-    updatePodium(0, "p1", "🥇");
-    updatePodium(1, "p2", "🥈");
-    updatePodium(2, "p3", "🥉");
-
-    // בונוס: הכרזה קולית של המחשב על המנצח
-    if (sorted[0]) {
-        const msg = new SpeechSynthesisUtterance(`והאלופים שלנו הם משפחת ${sorted[0].name}`);
-        msg.lang = 'he-IL';
-        window.speechSynthesis.speak(msg);
-    }
+    updatePodium(0, "p1");
+    updatePodium(1, "p2");
+    updatePodium(2, "p3");
 }
+
 els.btnSpin.addEventListener("click", () => {
     AudioFX.init();
     if (state.locked || state.pool.length === 0) return;
@@ -275,9 +270,21 @@ renderScores();
 // כפתור בדיקה זמני למסך המנצחים
 // כפתור בדיקה זמני למסך המנצחים - מתוקן לפודיום
 document.getElementById("debugWin").onclick = () => {
-    // 1. נותנים נקודות אקראיות כדי שנראה תוצאות שונות בכל לחיצה
-    state.families.forEach(f => f.score = Math.floor(Math.random() * 20));
+    // 1. שליפת כל בועות הניקוד מהמסך
+    const scorePills = document.querySelectorAll('.scorePill');
 
-    // 2. קוראים לפונקציה המרכזית שמעדכנת את הפודיום
+    scorePills.forEach(pill => {
+        const name = pill.querySelector('span').textContent;
+        // שליפת המספר מתוך ה-div של הניקוד
+        const scoreValue = parseInt(pill.querySelector('.score-number').textContent);
+
+        // 2. עדכון הנתונים בזיכרון של המשחק (state)
+        const family = state.families.find(f => f.name === name);
+        if (family) {
+            family.score = scoreValue;
+        }
+    });
+
+    // 3. הצגת הפודיום עם הנתונים האמיתיים מהטבלה
     showEndScreen();
-};
+};ה
