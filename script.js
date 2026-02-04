@@ -97,32 +97,27 @@ function startTimer(duration = 90) {
 
     const updateUI = () => {
         els.timer.textContent = state.remaining;
-        const pct = (state.remaining / duration) * 100;
-        els.barFill.style.width = `${pct}%`;
+        els.barFill.style.width = `${(state.remaining / duration) * 100}%`;
 
         if (state.remaining <= 10) {
             els.timer.classList.add("low-time");
             els.barFill.classList.add("danger");
+            document.body.classList.add("screen-danger"); // מוסיף הבהוב
         } else {
             els.timer.classList.remove("low-time");
             els.barFill.classList.remove("danger");
+            document.body.classList.remove("screen-danger"); // מסיר הבהוב
         }
     };
 
     updateUI();
-
     state.intervalId = setInterval(() => {
         state.remaining--;
         updateUI();
-
-        if (state.remaining <= 10 && state.remaining > 0) {
-            AudioFX.tick(true);
-        } else if (state.remaining % 2 === 0 && state.remaining > 0) {
-            AudioFX.tick(false);
-        }
-
+        if (state.remaining <= 10 && state.remaining > 0) AudioFX.tick(true);
         if (state.remaining <= 0) {
             clearInterval(state.intervalId);
+            document.body.classList.remove("screen-danger"); // איפוס בסוף
             onTimeout();
         }
     }, 1000);
@@ -174,30 +169,35 @@ function resetTurnUI() {
 }
 
 function showEndScreen() {
-    // 1. מעבר מסך
     els.screenGame.classList.add("hidden");
     els.screenEnd.classList.remove("hidden");
+    document.body.classList.remove("screen-danger");
     AudioFX.celebrate();
 
-    // 2. מיון נתונים
     const sorted = [...state.families].sort((a, b) => b.score - a.score);
-    console.log("Ranking:", sorted); // לבדיקה ב-Console
 
-    // 3. שיבוץ נתונים בפודיום
+    // הזרקת נתונים ומדליות
+    const updatePodium = (index, placeId, medalEmoji) => {
+        if (sorted[index]) {
+            document.getElementById(`${placeId}-name`).innerHTML = `
+                <span class="medal">${medalEmoji}</span>
+                ${sorted[index].name}
+            `;
+            document.getElementById(`${placeId}-score`).textContent = sorted[index].score;
+        }
+    };
+
+    updatePodium(0, "p1", "🥇");
+    updatePodium(1, "p2", "🥈");
+    updatePodium(2, "p3", "🥉");
+
+    // בונוס: הכרזה קולית של המחשב על המנצח
     if (sorted[0]) {
-        document.getElementById("p1-name").textContent = sorted[0].name;
-        document.getElementById("p1-score").textContent = sorted[0].score;
-    }
-    if (sorted[1]) {
-        document.getElementById("p2-name").textContent = sorted[1].name;
-        document.getElementById("p2-score").textContent = sorted[1].score;
-    }
-    if (sorted[2]) {
-        document.getElementById("p3-name").textContent = sorted[2].name;
-        document.getElementById("p3-score").textContent = sorted[2].score;
+        const msg = new SpeechSynthesisUtterance(`והאלופים שלנו הם משפחת ${sorted[0].name}`);
+        msg.lang = 'he-IL';
+        window.speechSynthesis.speak(msg);
     }
 }
-
 els.btnSpin.addEventListener("click", () => {
     AudioFX.init();
     if (state.locked || state.pool.length === 0) return;
