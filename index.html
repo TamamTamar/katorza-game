@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>משחק משפחות - גרסת ה-WOW הסופית</title>
+    <title>משחק משפחות - גרסה נקייה</title>
     <link rel="stylesheet" href="./styles.css" />
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
@@ -12,16 +12,20 @@
 <body>
     <main class="wrap">
         <section class="card" id="mainCard">
+            <div id="toast" class="toast"></div>
+
             <section id="screenGame">
-                <div class="roulette">
-                    <div id="rouletteName" class="rouletteName">מוכנים?</div>
-                    <button id="btnSpin" class="btn btnPrimary">הגרל משימה</button>
+                <div class="roulette-container">
+                    <div class="pointer">▼</div>
+                    <div id="wheel" class="wheel"></div>
+                    <div id="rouletteName" class="rouletteName">לחצו להגרלה</div>
+                    <button id="btnSpin" class="btn btnPrimary">סובב את הגלגל!</button>
                 </div>
 
                 <div class="grid">
                     <section class="panel">
                         <div id="currentItem" class="item">—</div>
-                        <div id="taskText" class="taskText">המשימה תופיע כאן...</div>
+                        <div id="taskText" class="taskText">סובבו את הגלגל!</div>
                     </section>
 
                     <section class="panel">
@@ -29,15 +33,13 @@
                         <div class="bar">
                             <div id="barFill" class="barFill"></div>
                         </div>
-                        <div class="row center" style="margin-top:20px;">
+                        <div class="row center" style="margin-top:15px;">
                             <button id="btnCorrect" class="btn btnSuccess" disabled>תשובה נכונה ✅</button>
                         </div>
                     </section>
                 </div>
 
                 <div id="scores" class="scores"></div>
-               
-                <div id="toast" class="toast"></div>
             </section>
 
             <section id="screenEnd" class="hidden">

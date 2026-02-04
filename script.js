@@ -1,13 +1,18 @@
 const $ = (id) => document.getElementById(id);
 
-// --- 1. מערכת סאונד ---
+// --- 1. מערכת סאונד מלאה ---
 const AudioFX = {
     ctx: null,
     init() {
-        if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        if (!this.ctx) {
+            try {
+                this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+            } catch (e) { console.error("סאונד לא נתמך"); }
+        }
     },
     play(freq, type, duration, vol = 0.1) {
         this.init();
+        if (!this.ctx) return;
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
         osc.type = type;
@@ -26,12 +31,9 @@ const AudioFX = {
     },
     timeout() { this.play(150, 'sawtooth', 0.6, 0.2); },
     celebrate() {
-        confetti({
-            particleCount: 150,
-            spread: 70,
-            origin: { y: 0.6 },
-            colors: ['#2563eb', '#fbbf24', '#ffffff']
-        });
+        if (typeof confetti === 'function') {
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#2563eb', '#fbbf24', '#ffffff'] });
+        }
     }
 };
 
@@ -49,12 +51,11 @@ const els = {
     scores: $("scores"),
     winners: $("winners"),
     btnRestart: $("btnRestart"),
-    mainCard: $("mainCard")
+    mainCard: $("mainCard"),
+    wheel: $("wheel")
 };
 
-// רשימת משפחות (כולל מאמי שמחה)
 const PRESET_FAMILIES = ["מאמי שמחה", "דוד וחני", "אהרון ונחמה", "דוד ודבורה", "בנימין וחיה", "ישראל ויעל", "ברוך ואודליה", "מענדל ודבורי", "שלום בער ודבורה לאה", "אליהו ודבורה לאה"];
-
 const ITEMS = ["כיסא", "שולחן", "ארון", "מגירה", "מדף", "מפתח", "שעון", "כוס", "צלחת", "סיר", "קומקום", "מגבת", "שמיכה", "ספר", "עט", "תיק", "טלפון", "מטריה", "תמונה", "מראה", "נעל", "כובע", "וילון", "בקבוק"];
 
 const ROUNDS = [
@@ -63,22 +64,13 @@ const ROUNDS = [
     { prompt: (i) => `מה אפשר ללמוד בעבודת ה' מהחפץ <strong>${i}</strong>?` }
 ];
 
-let state = {
-    families: [],
-    pool: [],
-    roundIndex: 0,
-    remaining: 90,
-    running: false,
-    intervalId: null,
-    locked: false,
-    currentFam: null,
-    mode: 'normal',
-    globalCooldown: 0
-};
+let state = { families: [], pool: [], roundIndex: 0, remaining: 90, running: false, intervalId: null, locked: false, currentFam: null, mode: 'normal', globalCooldown: 0, currentRotation: 0 };
 
 function toast(msg) {
+    if (!msg) return;
     els.toast.textContent = msg;
-    setTimeout(() => { if (els.toast.textContent === msg) els.toast.textContent = ""; }, 2500);
+    els.toast.classList.add("show");
+    setTimeout(() => { els.toast.classList.remove("show"); }, 2000);
 }
 
 function renderScores() {
@@ -88,38 +80,17 @@ function renderScores() {
         const d = document.createElement("div");
         const isLeader = f.score === maxScore && maxScore > 0;
         d.className = `scorePill ${isLeader ? 'leader' : ''}`;
-        d.innerHTML = `
-            <span>${f.name}</span>
-            <div class="score-controls">
-                <div class="score-minus" title="הורד נקודה">−</div>
-                <div class="score-number" title="הוסף נקודה">${f.score}</div>
-            </div>
-        `;
-
+        d.innerHTML = `<span>${f.name}</span><div class="score-controls"><div class="score-minus">−</div><div class="score-number">${f.score}</div></div>`;
         d.querySelector(".score-number").onclick = (e) => {
-            e.stopPropagation();
-            f.score++;
-            AudioFX.celebrate();
-            AudioFX.correct();
-            renderScores();
-
-            if (state.running) {
-                toast(`נקודה ל${f.name}!`);
-                clearInterval(state.intervalId);
-                setTimeout(() => nextTurn(), 1200);
-            }
+            e.stopPropagation(); f.score++; AudioFX.celebrate(); AudioFX.correct(); renderScores();
+            if (state.running) { toast(`נקודה ל${f.name}!`); clearInterval(state.intervalId); setTimeout(() => nextTurn(), 1200); }
         };
-
         d.querySelector(".score-minus").onclick = (e) => {
-            e.stopPropagation();
-            f.score = Math.max(0, f.score - 1);
-            renderScores();
+            e.stopPropagation(); f.score = Math.max(0, f.score - 1); renderScores();
         };
-
         els.scores.appendChild(d);
     });
 }
-
 function startTimer(duration = 90) {
     if (state.intervalId) clearInterval(state.intervalId);
     state.remaining = duration;
@@ -145,7 +116,12 @@ function startTimer(duration = 90) {
         state.remaining--;
         updateUI();
 
-        if (state.remaining <= 10 && state.remaining > 0) AudioFX.tick(true);
+        if (state.remaining <= 10 && state.remaining > 0) {
+            AudioFX.tick(true);
+        } else if (state.remaining % 2 === 0 && state.remaining > 0) {
+            AudioFX.tick(false);
+        }
+
         if (state.remaining <= 0) {
             clearInterval(state.intervalId);
             onTimeout();
@@ -193,7 +169,7 @@ function resetTurnUI() {
     els.btnCorrect.disabled = true;
     els.rouletteName.textContent = "מי הבא בתור?";
     els.currentItem.textContent = "—";
-    els.taskText.textContent = "הגרל משפחה למשימה...";
+    els.taskText.textContent = "סובבו את הגלגל!";
     els.timer.textContent = "—";
     els.barFill.style.width = "0%";
 }
@@ -225,43 +201,44 @@ els.btnSpin.addEventListener("click", () => {
     els.btnSpin.disabled = true;
 
     state.globalCooldown++;
-    // הגרלה: 30% סיכוי לשאלה כללית, או חובה כל 5 תורות
     let isGlobal = (Math.random() < 0.3) || (state.globalCooldown >= 5);
-    let counter = 0;
 
-    const interval = setInterval(() => {
-        els.rouletteName.textContent = isGlobal && counter > 15 ? "????" : state.families[Math.floor(Math.random() * state.families.length)].name;
-        counter++;
+    state.currentRotation += (1800 + Math.floor(Math.random() * 360));
+    els.wheel.style.transform = `rotate(${state.currentRotation}deg)`;
 
-        if (counter > 20) {
-            clearInterval(interval);
+    let c = 0;
+    const inv = setInterval(() => {
+        els.rouletteName.textContent = isGlobal && c > 25 ? "????" : state.families[Math.floor(Math.random() * state.families.length)].name;
+        if (++c > 35) clearInterval(inv);
+    }, 100);
 
-            if (isGlobal) {
-                state.globalCooldown = 0;
-                state.mode = 'frenzy';
-                els.mainCard.classList.add("frenzy");
-                els.rouletteName.textContent = "שאלה לכולם! ⚡";
+    setTimeout(() => {
+        if (isGlobal) {
+            state.globalCooldown = 0;
+            state.mode = 'frenzy';
+            els.mainCard.classList.add("frenzy");
+            els.rouletteName.textContent = "משימה לכולם! ⚡";
+            toast("בונוס לכולם!");
+            const item = ITEMS[Math.floor(Math.random() * ITEMS.length)];
+            els.currentItem.textContent = item;
+            els.taskText.innerHTML = ROUNDS[state.roundIndex].prompt(item);
+            els.btnCorrect.disabled = true;
+            startTimer(45);
+        } else {
+            const idx = Math.floor(Math.random() * state.pool.length);
+            const chosen = state.pool.splice(idx, 1)[0];
+            state.currentFam = state.families.find(f => f.name === chosen.name);
+            els.rouletteName.textContent = state.currentFam.name;
+
+            setTimeout(() => {
                 const item = ITEMS[Math.floor(Math.random() * ITEMS.length)];
                 els.currentItem.textContent = item;
-                els.taskText.innerHTML = `<strong>בונוס לכולם:</strong> ` + ROUNDS[state.roundIndex].prompt(item);
-                els.btnCorrect.disabled = true;
-                startTimer(45);
-            } else {
-                const idx = Math.floor(Math.random() * state.pool.length);
-                const chosen = state.pool.splice(idx, 1)[0];
-                state.currentFam = state.families.find(f => f.name === chosen.name);
-                els.rouletteName.textContent = state.currentFam.name;
-
-                setTimeout(() => {
-                    const item = ITEMS[Math.floor(Math.random() * ITEMS.length)];
-                    els.currentItem.textContent = item;
-                    els.taskText.innerHTML = ROUNDS[state.roundIndex].prompt(item);
-                    els.btnCorrect.disabled = false;
-                    startTimer(90);
-                }, 600);
-            }
+                els.taskText.innerHTML = ROUNDS[state.roundIndex].prompt(item);
+                els.btnCorrect.disabled = false;
+                startTimer(90);
+            }, 500);
         }
-    }, 60);
+    }, 4000);
 });
 
 els.btnCorrect.addEventListener("click", () => {
@@ -275,7 +252,9 @@ els.btnCorrect.addEventListener("click", () => {
     if (isFast) AudioFX.celebrate();
 
     state.currentFam.score += (isFast ? 2 : 1);
+    toast(isFast ? "בונוס מהירות! +2" : "כל הכבוד! +1");
     renderScores();
+
     setTimeout(() => nextTurn(), 1200);
 });
 
@@ -283,7 +262,7 @@ els.btnRestart.addEventListener("click", () => {
     location.reload();
 });
 
-// אתחול משחק חדש בכל רענון
+// אתחול משחק
 state.families = PRESET_FAMILIES.map(n => ({ name: n, score: 0 }));
 state.pool = [...state.families];
 renderScores();
