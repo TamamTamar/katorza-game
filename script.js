@@ -59,11 +59,10 @@ const PRESET_FAMILIES = ["מאמי שמחה", "דוד וחני", "אהרון ו�
 const ITEMS = ["כיסא", "שולחן", "ארון", "מגירה", "מדף", "מפתח", "שעון", "כוס", "צלחת", "סיר", "קומקום", "מגבת", "שמיכה", "ספר", "עט", "תיק", "טלפון", "מטריה", "תמונה", "מראה", "נעל", "כובע", "וילון", "בקבוק"];
 
 const ROUNDS = [
-    { prompt: (i) => `ספרו סיפור מצחיק שהמילה <strong>${i}</strong> מזכירה לכם.` },
-    { prompt: (i) => `איזו תכונה טובה החפץ <strong>${i}</strong> מזכיר לכם?` },
-    { prompt: (i) => `מה אפשר ללמוד בעבודת ה' מהחפץ <strong>${i}</strong>?` }
+    { prompt: (i) => `ספרו סיפור מצחיק שקרה עם <strong>פאפי חי</strong> ו-<strong>${i}</strong>.` },
+    { prompt: (i) => `איזו תכונה טובה של <strong>פאפי</strong> מזכיר לכם החפץ <strong>${i}</strong>?` },
+    { prompt: (i) => `מה <strong>פאפי</strong> היה לומד מ-<strong>${i}</strong>?` }
 ];
-
 let state = { families: [], pool: [], roundIndex: 0, remaining: 90, running: false, intervalId: null, locked: false, currentFam: null, mode: 'normal', globalCooldown: 0, currentRotation: 0 };
 
 function toast(msg) {
