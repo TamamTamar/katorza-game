@@ -175,22 +175,28 @@ function resetTurnUI() {
 }
 
 function showEndScreen() {
+    // 1. מעבר מסך
     els.screenGame.classList.add("hidden");
     els.screenEnd.classList.remove("hidden");
     AudioFX.celebrate();
 
-    els.winners.innerHTML = "";
+    // 2. מיון נתונים
     const sorted = [...state.families].sort((a, b) => b.score - a.score);
+    console.log("Ranking:", sorted); // לבדיקה ב-Console
 
-    sorted.forEach(f => {
-        const d = document.createElement("div");
-        d.className = `scorePill`;
-        d.style.margin = "10px auto";
-        d.style.width = "100%";
-        d.style.maxWidth = "400px";
-        d.innerHTML = `<span>${f.name}</span><span class="score-number">${f.score}</span>`;
-        els.winners.appendChild(d);
-    });
+    // 3. שיבוץ נתונים בפודיום
+    if (sorted[0]) {
+        document.getElementById("p1-name").textContent = sorted[0].name;
+        document.getElementById("p1-score").textContent = sorted[0].score;
+    }
+    if (sorted[1]) {
+        document.getElementById("p2-name").textContent = sorted[1].name;
+        document.getElementById("p2-score").textContent = sorted[1].score;
+    }
+    if (sorted[2]) {
+        document.getElementById("p3-name").textContent = sorted[2].name;
+        document.getElementById("p3-score").textContent = sorted[2].score;
+    }
 }
 
 els.btnSpin.addEventListener("click", () => {
@@ -266,3 +272,13 @@ els.btnRestart.addEventListener("click", () => {
 state.families = PRESET_FAMILIES.map(n => ({ name: n, score: 0 }));
 state.pool = [...state.families];
 renderScores();
+
+// כפתור בדיקה זמני למסך המנצחים
+// כפתור בדיקה זמני למסך המנצחים - מתוקן לפודיום
+document.getElementById("debugWin").onclick = () => {
+    // 1. נותנים נקודות אקראיות כדי שנראה תוצאות שונות בכל לחיצה
+    state.families.forEach(f => f.score = Math.floor(Math.random() * 20));
+
+    // 2. קוראים לפונקציה המרכזית שמעדכנת את הפודיום
+    showEndScreen();
+};

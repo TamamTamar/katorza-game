@@ -170,9 +170,11 @@ body {
     cursor: pointer;
     transition: 0.2s;
     font-size: 1.1rem;
+    
 }
 
 .btnPrimary {
+
     background: var(--primary);
     color: white;
     width: 200px;
@@ -297,4 +299,108 @@ body {
 
 .hidden {
     display: none !important;
+}
+.endTitle {
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--primary);
+    margin-bottom: 10px;
+    text-align: center;
+}
+.endWrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* זה הקסם שקובע שהכל יהיה באמצע אופקית */
+    text-align: center;
+}
+.podium {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 15px;
+    margin: 40px 0;
+    height: 300px;
+}
+
+.podium-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 120px;
+}
+
+.step {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.9);
+    border-radius: 15px 15px 0 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.podium-name {
+    font-weight: 800;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    /* הקטנה קלה של הפונט */
+    min-height: 2.4em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    /* מוודא שהשם מוגבל לרוחב המדרגה */
+    word-wrap: break-word;
+    /* שובר שורות במידת הצורך */
+}
+
+.podium-score {
+    font-weight: 900;
+    margin-top: 10px;
+    font-size: 1.5rem;
+    color: var(--primary);
+}
+
+/* גבהים וצבעים למדרגות */
+.place-1 .step {
+    height: 180px;
+    background: linear-gradient(#ffd700, #ffae00);
+    border: 3px solid #f1c40f;
+    color: #fff;
+}
+
+.place-2 .step {
+    height: 130px;
+    background: linear-gradient(#bdc3c7, #95a5a6);
+    border: 3px solid #bdc3c7;
+}
+
+.place-3 .step {
+    height: 90px;
+    background: linear-gradient(#cd7f32, #a0522d);
+    border: 3px solid #cd7f32;
+}
+
+/* כתר למקום ראשון */
+.place-1::before {
+    content: "👑";
+    font-size: 2rem;
+    margin-bottom: 5px;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
 }

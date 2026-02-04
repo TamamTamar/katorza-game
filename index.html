@@ -39,17 +39,56 @@
                     </section>
                 </div>
 
+                <button id="debugWin" style="position: fixed; 
+                               bottom: 20px; 
+                               left: 20px; 
+                               background: #ff4757; 
+                               color: white; 
+                               border: none; 
+                               border-radius: 50px; 
+                               padding: 10px 20px; 
+                               font-weight: bold; 
+                               box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4); 
+                               cursor: pointer; 
+                               z-index: 9999; 
+                               display: flex; 
+                               align-items: center; 
+                               gap: 8px;
+                               transition: transform 0.2s;">
+                    <span style="font-size: 18px;">👁️</span>
+                    בדיקת פודיום
+                </button>
+
                 <div id="scores" class="scores"></div>
             </section>
 
-            <section id="screenEnd" class="hidden">
-                <div class="endWrap">
-                    <h1 class="endTitle">האלופים שלנו! 🎉</h1>
-                    <div id="winners" class="winners"></div>
-                    <button id="btnRestart" class="btn btnPrimary">משחק חדש</button>
+        <section id="screenEnd" class="hidden">
+            <div class="endWrap">
+                <h1 class="endTitle">האלופים שלנו! 🎉</h1>
+        
+            <div id="podium" class="podium">
+                <div class="podium-item place-2">
+                    <div class="podium-name" id="p2-name">---</div>
+                    <div class="step">2</div>
+                    <div class="podium-score" id="p2-score">0</div>
                 </div>
-            </section>
+                <div class="podium-item place-1">
+                    <div class="podium-name" id="p1-name">---</div>
+                    <div class="step">1</div>
+                    <div class="podium-score" id="p1-score">0</div>
+                </div>
+                <div class="podium-item place-3">
+                    <div class="podium-name" id="p3-name">---</div>
+                    <div class="step">3</div>
+                    <div class="podium-score" id="p3-score">0</div>
+                </div>
+            </div>
+        
+                <button id="btnRestart" class="btn btnPrimary">משחק חדש</button>
+            </div>
         </section>
+        </section>
+   
     </main>
     <script src="./script.js"></script>
 </body>
