@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>משחק משפחות - גרסה סופית</title>
+    <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body>
+    <main class="wrap">
+        <section class="card">
+            <section id="screenGame">
+                <div class="roulette">
+                    <div id="rouletteName" class="rouletteName">—</div>
+                    <div class="row center">
+                        <button id="btnSpin" class="btn btnPrimary" type="button">הגרל משפחה</button>
+                    </div>
+                </div>
+
+                <div class="grid">
+                    <section class="panel">
+                        <div id="currentItem" class="item">—</div>
+                        <div id="taskText" class="taskText">לחצו הגרל כדי להתחיל</div>
+                    </section>
+
+                    <section class="panel">
+                        <div id="timer" class="timer">—</div>
+                        <div class="bar">
+                            <div id="barFill" class="barFill"></div>
+                        </div>
+                        <div class="row center" style="margin-top:20px;">
+                            <button id="btnCorrect" class="btn btnPrimary" type="button" disabled>תשובה נכונה</button>
+                        </div>
+                    </section>
+                </div>
+
+                <div id="scores" class="scores"></div>
+                <div id="toast" class="toast"></div>
+            </section>
+
+            <section id="screenEnd" class="hidden">
+                <div class="endWrap">
+                    <h1 class="endTitle">סיימנו! 🎉</h1>
+                    <div id="winners" class="winners"></div>
+                    <button id="btnRestart" class="btn btnPrimary" style="margin-top:20px;">משחק חדש</button>
+                </div>
+            </section>
+        </section>
+    </main>
+    <script src="./script.js"></script>
+</body>
+
+</html>

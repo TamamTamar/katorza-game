@@ -1,0 +1,224 @@
+:root {
+    --main-bg: #0f172a;
+    --card-bg: rgba(255, 255, 255, 0.95);
+    --primary: #2563eb;
+    --primary-dark: #1e40af;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --danger: #ef4444;
+    --radius-lg: 24px;
+    --radius-md: 16px;
+    --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: radial-gradient(circle at top left, #1e293b, #0f172a);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wrap {
+    width: 100%;
+    max-width: 900px;
+    padding: 20px;
+}
+
+.card {
+    background: var(--card-bg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    padding: 40px;
+    position: relative;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* רולטה */
+.roulette {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.rouletteName {
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    font-weight: 900;
+    background: linear-gradient(to bottom, var(--primary), var(--primary-dark));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 20px 0;
+}
+
+/* כפתורים */
+.btn {
+    border: none;
+    padding: 16px 32px;
+    border-radius: var(--radius-md);
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btnPrimary {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+}
+
+.btnPrimary:hover:not(:disabled) {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.btn:disabled {
+    background: #cbd5e1;
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+
+/* משחק */
+.grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 24px;
+    margin: 30px 0;
+}
+
+@media (max-width: 768px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.panel {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--radius-md);
+    padding: 24px;
+    text-align: center;
+}
+
+.item {
+    font-size: 3rem;
+    font-weight: 900;
+    margin-bottom: 10px;
+}
+
+.taskText {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.timer {
+    font-size: 5rem;
+    font-weight: 900;
+    color: var(--primary);
+}
+
+.timer.low-time {
+    color: var(--danger);
+    animation: pulse 0.8s infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.bar {
+    height: 12px;
+    background: #e2e8f0;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.barFill {
+    height: 100%;
+    background: var(--primary);
+    transition: width 1s linear;
+}
+
+.barFill.danger {
+    background: var(--danger);
+}
+
+/* ניקוד */
+.scores {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.scorePill {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    padding: 8px 16px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+}
+
+.score-number {
+    background: var(--primary);
+    color: white !important;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 0.9rem;
+    -webkit-text-fill-color: white;
+}
+
+.toast {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1e293b;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 999px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+}
+
+.toast:not(:empty) {
+    opacity: 1;
+}
+
+.endTitle {
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--primary);
+    text-align: center;
+}
