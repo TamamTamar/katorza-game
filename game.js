@@ -94,7 +94,7 @@ els.btnSpin.addEventListener("click", () => {
     }, 3500);
 
     state.globalCooldown++;
-    let isGlobal = (Math.random() < 0.3) || (state.globalCooldown >= 5);
+    let isGlobal = (Math.random() < 0.1) || (state.globalCooldown >= 8);
     state.currentRotation += (1800 + Math.floor(Math.random() * 360));
     els.wheel.style.transform = `rotate(${state.currentRotation}deg)`;
 
