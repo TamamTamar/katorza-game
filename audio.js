@@ -17,34 +17,24 @@ const AudioFX = {
         const now = this.ctx.currentTime;
         this.init();
 
-        const playTone = (freq, startOffset, duration, type = 'triangle') => {
+        // פונקציה פנימית קטנה ליצירת צליל מנצנץ
+        const playNote = (freq, delay) => {
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
-
-            osc.type = type;
-            osc.frequency.setValueAtTime(freq, now + startOffset);
-
-            // ווליום שמתחיל חזק ודועך
-            gain.gain.setValueAtTime(0.2, now + startOffset);
-            gain.gain.exponentialRampToValueAtTime(0.01, now + startOffset + duration);
-
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, now + delay);
+            gain.gain.setValueAtTime(0.2, now + delay);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + delay + 0.4);
             osc.connect(gain);
             gain.connect(this.ctx.destination);
-
-            osc.start(now + startOffset);
-            osc.stop(now + startOffset + duration);
+            osc.start(now + delay);
+            osc.stop(now + delay + 0.4);
         };
 
-        // סדרה מהירה של תווים שעולים גבוה (אפקט נצנוץ)
-        const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
-        notes.forEach((freq, i) => {
-            playTone(freq, i * 0.06, 0.3, 'triangle');
-        });
-
-        // תו אחד ארוך וגבוה בסוף שנותן את ה"פיניש"
-        playTone(1567.98, 0.3, 0.6, 'sine');
-        // תו נמוך ועמוק שנותן "גוף" לצליל ההצלחה
-        playTone(130.81, 0, 0.5, 'triangle');
+        // שלושה תווים שעולים מהר (בלינג!)
+        playNote(523.25, 0);    // דו
+        playNote(659.25, 0.07); // מי
+        playNote(783.99, 0.14); // סול
     },
 
     // צליל "אווווו" של אכזבה (תדר יורד בהדרגה)

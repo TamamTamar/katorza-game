@@ -137,10 +137,11 @@ body {
 }
 
 .item {
-    font-size: 2.5rem;
+    font-size: 4rem;
+    /* הגדלנו מ-2.5 ל-4 */
     font-weight: 900;
-    margin-bottom: 10px;
     color: #1e293b;
+    margin-bottom: 10px;
 }
 
 .taskText {
