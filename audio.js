@@ -14,15 +14,64 @@ const AudioFX = {
     suspense() { this.play(200, 'triangle', 0.5, 0.05); },
 
     correct() {
-        this.play(523.25, 'triangle', 0.2, 0.1);
-        setTimeout(() => this.play(659.25, 'triangle', 0.2, 0.1), 100);
-        setTimeout(() => this.play(783.99, 'triangle', 0.4, 0.1), 200);
+        const now = this.ctx.currentTime;
+        this.init();
+
+        const playTone = (freq, startOffset, duration, type = 'triangle') => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, now + startOffset);
+
+            // ווליום שמתחיל חזק ודועך
+            gain.gain.setValueAtTime(0.2, now + startOffset);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + startOffset + duration);
+
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+
+            osc.start(now + startOffset);
+            osc.stop(now + startOffset + duration);
+        };
+
+        // סדרה מהירה של תווים שעולים גבוה (אפקט נצנוץ)
+        const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+        notes.forEach((freq, i) => {
+            playTone(freq, i * 0.06, 0.3, 'triangle');
+        });
+
+        // תו אחד ארוך וגבוה בסוף שנותן את ה"פיניש"
+        playTone(1567.98, 0.3, 0.6, 'sine');
+        // תו נמוך ועמוק שנותן "גוף" לצליל ההצלחה
+        playTone(130.81, 0, 0.5, 'triangle');
     },
 
+    // צליל "אווווו" של אכזבה (תדר יורד בהדרגה)
     timeout() {
-        this.play(300, 'sawtooth', 0.2, 0.1);
-        setTimeout(() => this.play(200, 'sawtooth', 0.2, 0.1), 200);
-        setTimeout(() => this.play(150, 'sawtooth', 0.6, 0.1), 400);
+        const now = this.ctx.currentTime;
+        const duration = 0.8; // משך הצליל
+
+        this.init();
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        // שימוש בגל 'triangle' נותן תחושה אנושית ורכה יותר מ-'sawtooth'
+        osc.type = 'triangle';
+
+        // התחלה בתדר בינוני (למשל 300Hz) וירידה חלקה לתדר נמוך (150Hz)
+        osc.frequency.setValueAtTime(300, now);
+        osc.frequency.exponentialRampToValueAtTime(150, now + duration);
+
+        // ווליום שמתחיל חזק ודועך לאט
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+
+        osc.start();
+        osc.stop(now + duration);
     },
 
     frenzyAlert() {
