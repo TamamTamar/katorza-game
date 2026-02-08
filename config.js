@@ -13,7 +13,6 @@ const ITEMS = [
     "כדור ⚽", "בובה 🧸", "קלפים 🃏", "גיטרה 🎸", "מצלמה 📷", "פנס 🔦", "מספריים ✂️", "פטיש 🔨"
 ];
 const ROUNDS = [
-    { prompt: (i) => `ספרו סיפור מצחיק שקרה עם <strong>פאפי חי</strong> ו-<strong>${i}</strong>.` },
-    { prompt: (i) => `איזו תכונה טובה של <strong>פאפי</strong> מזכיר לכם החפץ <strong>${i}</strong>?` },
-    { prompt: (i) => `מה <strong>פאפי</strong> היה לומד מ-<strong>${i}</strong>?` }
+    { prompt: (i) => `ספרו סיפור שקרה עם <strong>פאפי חי</strong> ו-<strong>${i}</strong>.` },
+    { prompt: (i) => `איזו תכונה של <strong>פאפי</strong> מזכיר לכם החפץ <strong>${i}</strong>?` },
 ];
